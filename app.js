@@ -1,5 +1,6 @@
 var canvas = new fabric.Canvas('c');
 canvas.preserveObjectStacking = true;
+
 document.querySelectorAll('.library img').forEach(el => {
 	el.addEventListener("click", () => {
 		fabric.Image.fromURL(el.src, (img) => {
@@ -25,30 +26,13 @@ function exportToJson() {
 	var world = new Object();
 	var objects = [];
 	canvas.getObjects().forEach(el => {
-		var spriteImage = el._originalElement.currentSrc.replace(/^.*[\\\/]/, '');
+		const spriteImage = el._originalElement.currentSrc.replace(/^.*[\\\/]/, '');
 		if (spriteImage == "1.png") {
-			var hero =
-			{
-				x: el.left,
-				y: el.top,
-				vx: 0,
-				vy: 0,
-				w: el.width * el.scaleX,
-				h: el.height * el.scaleY,
-				og: false
-			}
-			world.hero = hero;
+			const player = new Player(el.left, el.top, el.width * el.scaleX, el.height * el.scaleY, 0, 0, false);
+			world.hero = player;
 		} else {
-			var sceneObject =
-			{
-				x: el.left,
-				y: el.top,
-				w: el.width * el.scaleX,
-				h: el.height * el.scaleY,
-				sprite: spriteImage,
-				type: spriteToType[spriteImage]
-			}
-			objects.push(sceneObject);
+			gameObject = new GameObject(el.left, el.top, el.width * el.scaleX, el.height * el.scaleY, spriteToType[spriteImage], spriteImage);
+			objects.push(gameObject);
 		}
 	});
 	world.objects = objects;
@@ -58,7 +42,7 @@ function exportToJson() {
 const showInfo = () => canvas.getActiveObject();
 const deleteSelected = () => canvas.remove(canvas.getActiveObject());
 const moveToTop = () => canvas.bringToFront(canvas.getActiveObject());
-const deleteAll = () => canvas.remove(canvas.getObjects());
+const deleteAll = () => canvas.clear();
 const moveToBottom = () => canvas.sendToBack(canvas.getActiveObject());
 const moveUpLayer = () => canvas.bringForward(canvas.getActiveObject());
 const moveDownLayer = () => canvas.sendBackwards(canvas.getActiveObject());
