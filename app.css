@@ -3,7 +3,14 @@ body{
     margin: 0;
 }
 .wrapper {
+    width: 100%;
     display: flex;
+    justify: space-between;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
 }
 
 .library {
